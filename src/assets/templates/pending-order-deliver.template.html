@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido de costuras finalizado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            margin: 20px 0;
+        }
+        .logo img {
+            width: 100px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .content p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .button a {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .button a:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin: 20px 0;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://firebasestorage.googleapis.com/v0/b/casa-costuras-tipicas.appspot.com/o/assets%2Flogo-fondo.png?alt=media&token=1d422c0d-69a3-49bf-8063-eccdbffceb1a" alt="Logo">
+        </div>
+        <div class="content">
+            <h2>Hola, te saludamos desde casita de las costuras</h2>
+            <p>Por medio de este correo eletrónico, te informamos que tu orden con #{{id_order}}, esta lista para que la puedas pasar a recoger.</p>
+        </div>
+        <!-- <div class="button">
+            <a href="{{verificationLink}}">Verificar Correo Electrónico</a>
+        </div> -->
+        <div class="footer">
+            <p>Horario de atención de lunes a viernes de 9:00a.m. - 12:30p.m. y de 2:30a.m. - 5:00p.m. </p>
+        </div>
+    </div>
+</body>
+</html>

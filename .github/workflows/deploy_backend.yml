@@ -1,0 +1,54 @@
+name: Deploy to DigitalOcean
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image to GitHub Container Registry"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Loguear en Docker en el servidor DigitalOcean
+      - name: Autenticar en GHCR directamente en el servidor
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.DO_SERVER_IP }}
+          username: ${{ secrets.DO_SERVER_USER }}
+          password: ${{ secrets.DO_SERVER_PASSWORD }}
+          script: |
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ secrets.GHCR_USER }} --password-stdin
+            echo "Docker login en el servidor exitoso"
+
+      # Paso 2: Actualizar docker-compose.yml en el servidor y reiniciar servicios.
+      - name: Actualizar docker-compose.yml y reiniciar servicios
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.DO_SERVER_IP }}
+          username: ${{ secrets.DO_SERVER_USER }}
+          password: ${{ secrets.DO_SERVER_PASSWORD }}
+          script: |
+            cd ~/casita_costuras
+            # Actualizar la versión de la imagen en docker-compose.yml para que use "latest" en lugar de SHA
+            sed -i 's/ghcr\.io\/casitadelascosturas\/casita-costuras-backend:.*$/ghcr.io\/casitadelascosturas\/casita-costuras-backend\/casita-costuras-backend:latest/' docker-compose.yml
+            echo "docker-compose.yml actualizado con la versión 'latest'"
+            # Verificar el contenido de docker-compose.yml
+            cat docker-compose.yml
+            # Reiniciar el backend con la nueva imagen
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
+            echo "Despliegue completado y limpieza de imágenes antiguas realizada"
+      # Paso 3: Limpiar imágenes de Docker no activas
+      - name: Limpiar imágenes de Docker no activas
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.DO_SERVER_IP }}
+          username: ${{ secrets.DO_SERVER_USER }}
+          password: ${{ secrets.DO_SERVER_PASSWORD }}
+          script: |
+            # Eliminar todas las imágenes no activas
+            docker image prune -a -f
+            echo "Imágenes de Docker no activas eliminadas"
